@@ -1,0 +1,44 @@
+1. Struct with static arrays:
+
+struct student {
+    char last_name[100], first_name[100];  // fixed size
+    int register_number;
+    float average;
+};
+
+struct student *v = malloc(n * sizeof(struct student));
+
+Easy, fields are always inside struct.
+Wastes space if names are short.
+
+
+2. Struct with dynamic arrays (pointers):
+
+struct student {
+    char *last_name, *first_name;  // dynamic
+    int register_number;
+    float average;
+};
+
+struct student *v = malloc(n * sizeof(struct student));
+
+for (i=0; i<n; i++) {
+    v[i].last_name  = malloc(strlen(ln)+1);
+    v[i].first_name = malloc(strlen(fn)+1);
+}
+
+More flexible, only allocates needed space.
+
+Must free both inner strings and main array.
+
+3. Common mistake 🚫
+
+Forgetting to allocate inner fields when using pointers.
+
+Leads to segmentation fault.
+
+👉 Summary
+
+Static fields → simpler, but fixed size.
+
+Dynamic fields → flexible, but requires multiple malloc/free.
