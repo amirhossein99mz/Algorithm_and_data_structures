@@ -1,1 +1,61 @@
 Basic concepts of dynamic memory in the C language.
+❓ Question
+
+How can we make dynamically allocated memory accessible outside the function where it was created?
+
+✅ Solution 1: Global Pointer (❌ not recommended)
+#include <stdio.h>
+#include <stdlib.h>
+
+int *v = NULL;   // global pointer
+
+void read_and_store(int n) {
+    v = malloc(n * sizeof(int));
+    for (int i = 0; i < n; i++) scanf("%d", &v[i]);
+}
+
+int main() {
+    int n = 3;
+    read_and_store(n);
+    for (int i = 0; i < n; i++) printf("%d ", v[i]);
+    free(v);
+}
+✅ Solution 2: Return Pointer
+#include <stdio.h>
+#include <stdlib.h>
+
+int* read_and_store(int n) {
+    int *p = malloc(n * sizeof(int));
+    for (int i = 0; i < n; i++) scanf("%d", &p[i]);
+    return p;
+}
+
+int main() {
+    int n = 3;
+    int *v = read_and_store(n);
+    for (int i = 0; i < n; i++) printf("%d ", v[i]);
+    free(v);
+}
+✅ Solution 3: Pass by Reference (Best & Most Flexible)
+#include <stdio.h>
+#include <stdlib.h>
+
+void read_and_store(int **ptr, int n) {
+    *ptr = malloc(n * sizeof(int));
+    for (int i = 0; i < n; i++) scanf("%d", &(*ptr)[i]);
+}
+
+int main() {
+    int n = 3;
+    int *v = NULL;
+    read_and_store(&v, n);
+    for (int i = 0; i < n; i++) printf("%d ", v[i]);
+    free(v);
+}
+👉 Summary:
+
+Solution 1: Use global pointer → ❌ bad practice.
+
+Solution 2: Return pointer → ✅ good for single value.
+
+Solution 3: Pass pointer by reference → ✅ best, flexible, modular.
