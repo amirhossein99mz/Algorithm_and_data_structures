@@ -1,30 +1,31 @@
-Problem:
+Problem
 
-We read a string into a fixed array (str), but we want to store it in dynamically allocated memory (v).
+We read input into a fixed-size array (buffer), but we want to store it in dynamically allocated memory (dynamic_str).
 
-Solution 1 (Manual malloc + strcpy):
+✅ Solution 1 (Manual malloc + strcpy):
 
-char str[101], *v;
+char buffer[101], *dynamic_str;
 
-scanf("%s", str);
-v = malloc((strlen(str) + 1) * sizeof(char));  // +1 for '\0'
-strcpy(v, str);
+scanf("%s", buffer);
+dynamic_str = malloc((strlen(buffer) + 1) * sizeof(char));  // +1 for '\0'
+strcpy(dynamic_str, buffer);
 
-free(v);
-✅ Works, but easy to forget the +1.
+free(dynamic_str);
 
-Solution 2 (Using strdup):
+Works, but easy to forget the +1.
 
-char str[101], *v;
+✅ Solution 2 (Using strdup):
 
-scanf("%s", str);
-v = strdup(str);   // allocates + copies automatically
+char buffer[101], *dynamic_str;
 
-free(v);
-✅ Cleaner, safer, shorter.
+scanf("%s", buffer);
+dynamic_str = strdup(buffer);   // allocates + copies automatically
 
-👉 Summary:
+free(dynamic_str);
 
-malloc + strcpy = manual, risk of bugs if you forget +1.
+👉 Summary
 
-strdup = automatic, preferred.
+malloc + strcpy → manual, risk of bugs if you forget +1.
+
+strdup → automatic, preferred.
+
