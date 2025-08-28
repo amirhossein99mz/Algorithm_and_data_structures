@@ -1,61 +1,71 @@
-Basic concepts of dynamic memory in the C language.
-❓ Question
+Basic Concepts of Dynamic Memory in C
 
+❓ Question:
 How can we make dynamically allocated memory accessible outside the function where it was created?
 
-✅ Solution 1: Global Pointer (❌ not recommended)
+✅ Solution 1: Global Pointer (❌ not recommended):
+
 #include <stdio.h>
 #include <stdlib.h>
 
-int *v = NULL;   // global pointer
+int *global_array = NULL;   // global pointer
 
-void read_and_store(int n) {
-    v = malloc(n * sizeof(int));
-    for (int i = 0; i < n; i++) scanf("%d", &v[i]);
+void allocate_and_read(int count) {
+    global_array = malloc(count * sizeof(int));
+    for (int i = 0; i < count; i++) scanf("%d", &global_array[i]);
 }
 
 int main() {
-    int n = 3;
-    read_and_store(n);
-    for (int i = 0; i < n; i++) printf("%d ", v[i]);
-    free(v);
+    int size = 3;
+    allocate_and_read(size);
+    for (int i = 0; i < size; i++) printf("%d ", global_array[i]);
+    free(global_array);
 }
-✅ Solution 2: Return Pointer
+❌ Works, but unsafe design (global variable).
+
+✅ Solution 2: Return Pointer:
+
 #include <stdio.h>
 #include <stdlib.h>
 
-int* read_and_store(int n) {
-    int *p = malloc(n * sizeof(int));
-    for (int i = 0; i < n; i++) scanf("%d", &p[i]);
-    return p;
+int* allocate_and_read(int count) {
+    int *array = malloc(count * sizeof(int));
+    for (int i = 0; i < count; i++) scanf("%d", &array[i]);
+    return array;
 }
 
 int main() {
-    int n = 3;
-    int *v = read_and_store(n);
-    for (int i = 0; i < n; i++) printf("%d ", v[i]);
-    free(v);
+    int size = 3;
+    int *numbers = allocate_and_read(size);
+    for (int i = 0; i < size; i++) printf("%d ", numbers[i]);
+    free(numbers);
 }
-✅ Solution 3: Pass by Reference (Best & Most Flexible)
+✅ Clean, good when returning a single pointer.
+
+✅ Solution 3: Pass by Reference (Best & Most Flexible):
+
 #include <stdio.h>
 #include <stdlib.h>
 
-void read_and_store(int **ptr, int n) {
-    *ptr = malloc(n * sizeof(int));
-    for (int i = 0; i < n; i++) scanf("%d", &(*ptr)[i]);
+void allocate_and_read(int **ptr, int count) {
+    *ptr = malloc(count * sizeof(int));
+    for (int i = 0; i < count; i++) scanf("%d", &(*ptr)[i]);
 }
 
 int main() {
-    int n = 3;
-    int *v = NULL;
-    read_and_store(&v, n);
-    for (int i = 0; i < n; i++) printf("%d ", v[i]);
-    free(v);
+    int size = 3;
+    int *numbers = NULL;
+    allocate_and_read(&numbers, size);
+    for (int i = 0; i < size; i++) printf("%d ", numbers[i]);
+    free(numbers);
 }
-👉 Summary:
 
-Solution 1: Use global pointer → ❌ bad practice.
+✅ Best approach: modular, flexible, avoids globals.
 
-Solution 2: Return pointer → ✅ good for single value.
+👉 Summary
 
-Solution 3: Pass pointer by reference → ✅ best, flexible, modular.
+Solution 1 → Global pointer → ❌ bad practice.
+
+Solution 2 → Return pointer → ✅ fine for simple cases.
+
+Solution 3 → Pass pointer by reference → ✅ best for flexibility and modularity.
