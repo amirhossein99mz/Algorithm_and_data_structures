@@ -1,31 +1,32 @@
 1. Struct with static arrays:
 
-struct student {
-    char last_name[100], first_name[100];  // fixed size
-    int register_number;
-    float average;
+struct Person {
+    char first_name[100];   // fixed-size array
+    char last_name[100];    // fixed-size array
+    int id_number;
+    float gpa;
 };
 
-struct student *v = malloc(n * sizeof(struct student));
+struct Person *people = malloc(n * sizeof(struct Person));
 
-Easy, fields are always inside struct.
-Wastes space if names are short.
 
 
 2. Struct with dynamic arrays (pointers):
 
-struct student {
-    char *last_name, *first_name;  // dynamic
-    int register_number;
-    float average;
+struct Person {
+    char *first_name;       // dynamically allocated
+    char *last_name;        // dynamically allocated
+    int id_number;
+    float gpa;
 };
 
-struct student *v = malloc(n * sizeof(struct student));
+struct Person *people = malloc(n * sizeof(struct Person));
 
-for (i=0; i<n; i++) {
-    v[i].last_name  = malloc(strlen(ln)+1);
-    v[i].first_name = malloc(strlen(fn)+1);
+for (i = 0; i < n; i++) {
+    people[i].first_name = malloc(strlen(fn) + 1);
+    people[i].last_name  = malloc(strlen(ln) + 1);
 }
+
 
 More flexible, only allocates needed space.
 
