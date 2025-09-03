@@ -2,63 +2,84 @@
 #include <stdlib.h>
 
 // Node structure
-struct Node {
+struct e {
     int data;
-    struct Node* next;
+    struct e *next;
 };
 
-struct Node* front = NULL;  // front of queue
-struct Node* rear = NULL;   // rear of queue
-
-// Enqueue = insert at rear
-void enqueue(int value) {
-    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+// Enqueue function (insert at rear)
+struct e* enqueue(struct e *tail, int value) {
+    struct e* newNode = (struct e*)malloc(sizeof(struct e));
+    if (newNode == NULL) {
+        printf("Queue Overflow\n");
+        return tail;
+    }
     newNode->data = value;
-    newNode->next = NULL;
-
-    if (rear == NULL) {          // if queue is empty
-        front = rear = newNode;  // first node
+    if (tail == NULL) {
+        // first node → points to itself
+        newNode->next = newNode;
+        tail = newNode;
     } else {
-        rear->next = newNode;    // link new node
-        rear = newNode;          // update rear
+        newNode->next = tail->next; // link new node to front
+        tail->next = newNode;       // old tail points to new node
+        tail = newNode;             // update tail
     }
     printf("%d enqueued\n", value);
+    return tail;
 }
 
-// Dequeue = remove from front
-void dequeue() {
-    if (front == NULL) {
-        printf("Queue empty\n");
-        return;
+// Dequeue function (remove from front)
+struct e* dequeue(struct e *tail, int *value, int *status) {
+    if (tail == NULL) {  // empty queue
+        printf("Queue Underflow\n");
+        *status = 0;
+        return tail;
     }
-    printf("%d dequeued\n", front->data);
-    struct Node* temp = front;
-    front = front->next;    // move front
-    if (front == NULL) {    // if queue becomes empty
-        rear = NULL;
+    struct e* front = tail->next;  // front is next of tail
+    *value = front->data;          // store dequeued value
+    *status = 1;
+    if (front == tail) {           // only one element
+        free(front);
+        tail = NULL;
+    } else {
+        tail->next = front->next;  // bypass old front
+        free(front);
     }
-    free(temp);
+    printf("%d dequeued\n", *value);
+    return tail;
 }
 
 // Display queue
-void display() {
-    struct Node* temp = front;
+void display(struct e* tail) {
+    if (tail == NULL) {
+        printf("Queue empty\n");
+        return;
+    }
+    struct e* temp = tail->next;  // start from front
     printf("Queue: ");
-    while (temp != NULL) {
+    do {
         printf("%d ", temp->data);
         temp = temp->next;
-    }
+    } while (temp != tail->next);
     printf("\n");
 }
 
+// Main function
 int main() {
-    enqueue(10);
-    enqueue(20);
-    enqueue(30);
-    display();   // Queue: 10 20 30
+    struct e *tail = NULL;
+    int val, status;
 
-    dequeue();   // removes 10
-    display();   // Queue: 20 30
+    tail = enqueue(tail, 10);
+    tail = enqueue(tail, 20);
+    tail = enqueue(tail, 30);
+    display(tail);  // Queue: 10 20 30
+
+    tail = dequeue(tail, &val, &status); // removes 10
+    display(tail);  // Queue: 20 30
+
+    tail = dequeue(tail, &val, &status); // removes 20
+    display(tail);  // Queue: 30
 
     return 0;
 }
+
