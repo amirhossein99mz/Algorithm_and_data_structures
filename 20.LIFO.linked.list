@@ -1,0 +1,26 @@
+START:
+top = NULL   // stack is empty
+
+PUSH(10):
+newNode->data = 10;        // newNode = [10 | ?]
+newNode->next = top;       // newNode = [10 | NULL]
+top = newNode;             // top → [10 | NULL]
+
+PUSH(20):
+newNode->data = 20;        // newNode = [20 | ?]
+newNode->next = top;       // newNode = [20 | next -> 10]
+top = newNode;             // top → [20 | 10] → [10 | NULL]
+
+PUSH(30):
+newNode->data = 30;        // newNode = [30 | ?]
+newNode->next = top;       // newNode = [30 | next -> 20]
+top = newNode;             // top → [30 | 20] → [20 | 10] → [10 | NULL]
+
+POP():
+printf("%d popped\n", top->data);  // prints "30 popped"
+temp = top;                        // temp → [30 | 20], top → [30 | 20]
+top = top->next;                   // top → [20 | 10] → [10 | NULL]
+free(temp);                        // deletes [30], stack now → [20 | 10] → [10 | NULL]
+
+FINAL STACK:
+top → [20 | 10] → [10 | NULL]
